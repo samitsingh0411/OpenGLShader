@@ -2,10 +2,13 @@
 #include <iostream>
 #include <glad/glad.h>
 #include "project/fucntions.h"
+#include <vector>
 
 extern SDL_Window* MyWindow;
 extern SDL_GLContext MyContext;
 extern bool gQuit;
+extern GLuint gVertexArrayObject;
+extern GLuint gVertexBufferObject;
 
 // Initializer Functions
 void intializer(int height, int width) {
@@ -42,6 +45,39 @@ void intializer(int height, int width) {
 }
 
 
+// Creating Vertex Specs
+void CreateVertexSpecs() {
+
+	// Declaring our vertex data
+	const std::vector<GLfloat> VertexPositionList = {
+		//x	 //y   //z
+		0.8f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f
+	};
+
+	// Generating and selecting vertex array object, this determines how we move through VBO
+	glGenVertexArrays(1, &gVertexArrayObject);
+	glBindVertexArray(gVertexArrayObject);
+	
+	// Generating and selecting vertex buffer object, this is what will hold our data
+	glGenBuffers(1, &gVertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
+
+	// Setting VBO and VAO 
+
+		// Setting VBO
+	glBufferData(GL_ARRAY_BUFFER, VertexPositionList.size() * sizeof(GLfloat), VertexPositionList.data(), GL_STATIC_DRAW); 
+		// Setting VAO
+	glEnableVertexAttribArray(0); // This enables vertex attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);	
+
+	// Unbinding and Diabling stuff so that we don't write to them again
+	glBindVertexArray(0);
+	glDisableVertexAttribArray(0);
+}
+
+
 // Main loop functions
 void mainloop() {
 	while (!gQuit) {
@@ -58,6 +94,7 @@ void mainloop() {
 	}
 
 }
+
 
 void Input() {
 	SDL_Event e;
@@ -80,3 +117,4 @@ void cleanup() {
 	SDL_DestroyWindow(MyWindow);
 	SDL_Quit();
 }
+

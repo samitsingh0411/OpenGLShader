@@ -7,3 +7,4 @@ void PreDraw();
 void Draw();
 void mainloop();
 void cleanup();
+void CreateVertexSpecs();
