@@ -4,11 +4,31 @@
 #include "project/fucntions.h"
 #include <vector>
 
+// WIndow and Context
 extern SDL_Window* MyWindow;
 extern SDL_GLContext MyContext;
 extern bool gQuit;
+
+// VBO and VAO
 extern GLuint gVertexArrayObject;
 extern GLuint gVertexBufferObject;
+
+// Graphics Pipeline
+extern GLuint gGraphicsPipelineProgram;
+
+const char* gVertexShaderSource =
+"#version 460 core\n"
+"in vec4 position;\n"
+"void main() {\n"
+"	gl_Position = vec4(position.x, position.y, position.z, position.w);\n"
+"}\n";
+
+const char* gFragmentShaderSource =
+"#version 460 core\n"
+"out vec4 color;\n"
+"void main() {\n"
+"	color = vec4(1.0f, 0.5f, 0.0f, 1);\n"
+"}\n";
 
 // Initializer Functions
 void intializer(int height, int width) {
@@ -44,16 +64,59 @@ void intializer(int height, int width) {
 	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 }
 
+// Creating Pipeline
+GLuint CompileShader(GLuint ShaderType, const char* ShaderSource) {
 
-// Creating Vertex Specs
+	GLuint ShaderObject;
+	
+	if (ShaderType == GL_VERTEX_SHADER) {
+		ShaderObject = glCreateShader(ShaderType);
+	}
+
+	else if (ShaderType == GL_FRAGMENT_SHADER) {
+		ShaderObject = glCreateShader(ShaderType);
+	}
+
+	glShaderSource(ShaderObject, 1, &ShaderSource, nullptr);
+	glCompileShader(ShaderObject);
+
+	return ShaderObject;
+}
+
+GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentShaderSrouce) {
+
+	// Creating an program object which is going to hold the program
+	GLuint ProgramObject = glCreateProgram();
+	
+	// Creating a vertex and fragment shader object
+
+	GLuint VertexShaderObject = CompileShader(GL_VERTEX_SHADER, gVertexShaderSource);
+	GLuint FragemtnShaderObject = CompileShader(GL_FRAGMENT_SHADER, gFragmentShaderSource);
+
+	glAttachShader(ProgramObject, VertexShaderObject);
+	glAttachShader(ProgramObject, FragemtnShaderObject);
+
+	// Verifying 
+	glValidateProgram(ProgramObject);
+	
+	return ProgramObject;
+
+}
+
+// Creating the graphics pipleline
+void CreateGraphicsPipeline() {
+	gGraphicsPipelineProgram = CreateShaderProgram(gVertexShaderSource, gFragmentShaderSource);
+}
+
+// Creating Vertex Specs	
 void CreateVertexSpecs() {
 
 	// Declaring our vertex data
 	const std::vector<GLfloat> VertexPositionList = {
 		//x	 //y   //z
-		0.8f, 0.0f, 0.5f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f
+		0.8f,  0.0f,  0.0f,
+		-0.8f, 0.0f,  0.0f,
+		0.0f,  0.8f,  0.0f
 	};
 
 	// Generating and selecting vertex array object, this determines how we move through VBO
@@ -95,7 +158,6 @@ void mainloop() {
 
 }
 
-
 void Input() {
 	SDL_Event e;
 
@@ -108,9 +170,24 @@ void Input() {
 	}
 }
 
-void PreDraw() {}
+void PreDraw() {
 
-void Draw() {}
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	
+	glViewport(0, 0, 640, 480);
+	glClearColor(1.f, 1.f, 0.f, 0.75f);
+
+	glUseProgram(gGraphicsPipelineProgram);
+}
+
+void Draw() {
+
+	glBindVertexArray(gVertexArrayObject);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
 
 // Cleanup Functions
 void cleanup() {
