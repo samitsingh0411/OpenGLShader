@@ -27,7 +27,7 @@ const char* gFragmentShaderSource =
 "#version 460 core\n"
 "out vec4 color;\n"
 "void main() {\n"
-"	color = vec4(1.0f, 0.5f, 0.7f, 1);\n"
+"	color = vec4(0.361f, 0.204f, 0.0f, 1.f);\n"
 "}\n";
 
 // Initializer Functions
@@ -112,7 +112,7 @@ GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentS
 	glAttachShader(ProgramObject, FragemtnShaderObject);
 
 	glLinkProgram(ProgramObject);
-	/*GLint isLinked;
+	GLint isLinked;
 	glGetProgramiv(ProgramObject, GL_LINK_STATUS, &isLinked);
 
 	if (!isLinked) {
@@ -124,7 +124,7 @@ GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentS
 
 	else {
 		std::cout << "Attached Shader to program object\n";
-	}*/
+	}
 
 	// Verifying 
 	glValidateProgram(ProgramObject);
@@ -214,7 +214,7 @@ void PreDraw() {
 	glDisable(GL_CULL_FACE);
 	
 	glViewport(0, 0, 640, 480);
-	glClearColor(0.5f, 0.7f, 0.f, 0.75f);
+	glClearColor(0.020f, 0.271f, 0.267f, 0.75f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(gGraphicsPipelineProgram);
