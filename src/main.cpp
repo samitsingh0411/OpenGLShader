@@ -16,6 +16,8 @@ GLuint gVertexBufferObject = 0;
 
 // Graphics Pipleline
 GLuint gGraphicsPipelineProgram = 0;
+std::string gVertexShaderSource;
+std::string gFragmentShaderSource;
 
 
 

@@ -3,6 +3,10 @@
 #include <glad/glad.h>
 #include "project/fucntions.h"
 #include <vector>
+#include <fstream>
+#include <sstream>
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
 
 // WIndow and Context
 extern SDL_Window* MyWindow;
@@ -16,19 +20,13 @@ extern GLuint gVertexBufferObject;
 // Graphics Pipeline
 extern GLuint gGraphicsPipelineProgram;
 
-const char* gVertexShaderSource =
-"#version 460 core\n"
-"in vec4 position;\n"
-"void main() {\n"
-"	gl_Position = vec4(position.x, position.y, position.z, position.w);\n"
-"}\n";
+extern std::string gVertexShaderSource;
 
-const char* gFragmentShaderSource =
-"#version 460 core\n"
-"out vec4 color;\n"
-"void main() {\n"
-"	color = vec4(0.361f, 0.204f, 0.0f, 1.f);\n"
-"}\n";
+extern std::string gFragmentShaderSource;
+
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+
 
 // Initializer Functions
 void intializer(int height, int width) {
@@ -66,7 +64,33 @@ void intializer(int height, int width) {
 
 }
 
+
+//###################################################################################################//
+
+
 // Creating Pipeline
+
+std::string LoadShaderString(std::string file_path) {
+
+	std::string Line = "";
+	std::string SourceCode = "";
+
+	std::fstream ShaderFile(file_path.c_str());
+
+	if (!ShaderFile) {
+		std::cout << "Failed to open file " << std::endl;
+		exit(-1);
+		return nullptr;
+	}
+
+	while (std::getline(ShaderFile, Line)) {
+		SourceCode += Line + "\n";
+	}
+
+	return SourceCode;
+
+}
+
 GLuint CompileShader(GLuint ShaderType, const char* ShaderSource) {
 
 	GLuint ShaderObject = 0;
@@ -104,9 +128,9 @@ GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentS
 	// Creating a vertex and fragment shader object
 
 	std::cout << "Created Vertex Shader Object\n";
-	GLuint VertexShaderObject = CompileShader(GL_VERTEX_SHADER, gVertexShaderSource);
+	GLuint VertexShaderObject = CompileShader(GL_VERTEX_SHADER, gVertexShaderSource.c_str());
 	std::cout << "Created Fragment Shader Object\n";
-	GLuint FragemtnShaderObject = CompileShader(GL_FRAGMENT_SHADER, gFragmentShaderSource);
+	GLuint FragemtnShaderObject = CompileShader(GL_FRAGMENT_SHADER, gFragmentShaderSource.c_str());
 
 	glAttachShader(ProgramObject, VertexShaderObject);
 	glAttachShader(ProgramObject, FragemtnShaderObject);
@@ -133,11 +157,21 @@ GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentS
 
 }
 
-// Creating the graphics pipleline
 void CreateGraphicsPipeline() {
-	gGraphicsPipelineProgram = CreateShaderProgram(gVertexShaderSource, gFragmentShaderSource);
+
+	gVertexShaderSource = LoadShaderString("C:\\Users\\samit\\source\\repos\\OpenGL Shader\\Shaders\\vertex.glsl");
+	gFragmentShaderSource = LoadShaderString("C:\\Users\\samit\\source\\repos\\OpenGL Shader\\Shaders\\frag.glsl");
+
+	std::cout << "Vertex Shader: \n" << gVertexShaderSource << "\n\n\n\n";
+	std::cout << "Fragment Shader: \n" << gFragmentShaderSource << std::endl;
+
+	gGraphicsPipelineProgram = CreateShaderProgram(gVertexShaderSource.c_str(), gFragmentShaderSource.c_str());
 	std::cout << "Creation of Graphics Pipeline Complete" << std::endl;
 }
+
+
+//###################################################################################################//
+
 
 // Creating Vertex Specs	
 void CreateVertexSpecs() {
@@ -174,6 +208,9 @@ void CreateVertexSpecs() {
 	glDisableVertexAttribArray(0);
 	std::cout << "Unbound vertex array and vertex buffer object" << std::endl;
 }
+
+
+//###################################################################################################//
 
 
 // Main loop functions
@@ -229,6 +266,8 @@ void Draw() {
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+
+//###################################################################################################//
 
 // Cleanup Functions
 void cleanup() {

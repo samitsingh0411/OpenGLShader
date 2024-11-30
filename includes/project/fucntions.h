@@ -9,4 +9,6 @@ void mainloop();
 void cleanup();
 void CreateVertexSpecs();
 GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentShaderSrouce);
+GLuint CompileShader(GLuint ShaderType, const char* ShaderSource);
 void CreateGraphicsPipeline();
+std::string LoadShaderString(std::string file_path);
