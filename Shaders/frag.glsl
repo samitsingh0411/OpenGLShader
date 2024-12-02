@@ -1,5 +1,9 @@
 #version 460 core
+
+in vec3 v_color;
+
 out vec4 color;
+
 void main() {
-	color = vec4(0.361f, 0.204f, 0.0f, 1.f);
+	color = vec4(v_color.r, v_color.g, v_color.b, 1.f);
 }

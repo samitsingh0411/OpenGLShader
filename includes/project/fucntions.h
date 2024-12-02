@@ -7,7 +7,7 @@ void PreDraw();
 void Draw();
 void mainloop();
 void cleanup();
-void CreateVertexSpecs();
+void CreateSpecs();
 GLuint CreateShaderProgram(const char* VertexShaderSource, const char* FragmentShaderSrouce);
 GLuint CompileShader(GLuint ShaderType, const char* ShaderSource);
 void CreateGraphicsPipeline();

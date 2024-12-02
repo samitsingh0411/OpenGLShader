@@ -27,7 +27,7 @@ int main() {
 
 	CreateGraphicsPipeline();
 
-	CreateVertexSpecs();
+	CreateSpecs();
 	
 	mainloop();
 

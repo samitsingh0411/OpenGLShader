@@ -174,14 +174,19 @@ void CreateGraphicsPipeline() {
 
 
 // Creating Vertex Specs	
-void CreateVertexSpecs() {
+void CreateSpecs() {
 
 	// Declaring our vertex data
-	const std::vector<GLfloat> VertexPositionList = {
+	const std::vector<GLfloat> VertexDataList = {
 		//x	 //y   //z
 		0.8f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f, // Color of vertex 1 
+	    
 		-0.8f, 0.0f,  0.0f,
-		0.0f,  0.8f,  0.0f
+		0.0f,  1.0f,  0.0f, // Color of vertex 2
+
+		0.0f,  0.8f,  0.0f,
+		0.0f,  0.0f,  1.0f // Color of vertex 3
 	};
 
 	// Generating and selecting vertex array object, this determines how we move through VBO
@@ -196,16 +201,25 @@ void CreateVertexSpecs() {
 
 	// Setting VBO and VAO 
 		// Setting VBO
-	glBufferData(GL_ARRAY_BUFFER, VertexPositionList.size() * sizeof(GLfloat), VertexPositionList.data(), GL_STATIC_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER, VertexDataList.size() * sizeof(GLfloat), VertexDataList.data(), GL_STATIC_DRAW); 
 	std::cout << "put data into the vertex buffer object";
+	
 		// Setting VAO
+	
+			// Setting Position
 	glEnableVertexAttribArray(0); // This enables vertex attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);	
-	std::cout << "enabled set the vertex array obejct specs\n";
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (void*)0);
+	std::cout << "Set position attrib\n";
+
+			// Setting Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (GLvoid*)(sizeof(GLfloat) * 3));
+	std::cout << "Set color attrib\n";
 
 	// Unbinding and Diabling stuff so that we don't write to them again
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	std::cout << "Unbound vertex array and vertex buffer object" << std::endl;
 }
 
