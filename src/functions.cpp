@@ -178,16 +178,34 @@ void CreateSpecs() {
 
 	// Declaring our vertex data
 	const std::vector<GLfloat> VertexDataList = {
+		
+		// Triangle 1
 		//x	 //y   //z
-		-0.5f, -0.5f,  0.0f,
-		1.0f,  0.0f,  0.0f, // Color of vertex 1 
+		-0.5f, -0.5f,  0.0f,   // left vertex
+		1.0f,  0.0f,  0.0f,   // Color of vertex 1 
 	    
-		0.5f, -0.5f,  0.0f,
-		0.0f,  1.0f,  0.0f, // Color of vertex 2
+		0.5f, -0.5f,  0.0f,   // right vertex
+		0.0f,  1.0f,  0.0f,   // Color of vertex 2
 
-		-0.5f,  0.5f,  0.0f,
-		0.0f,  0.0f,  1.0f // Color of vertex 3
+		-0.5f,  0.5f,  0.0f,  // top vertex
+		0.0f,  0.0f,  1.0f,    // Color of vertex 3
+
+
+		// Trianle 2fg						
+		//x	 //y   //z
+		0.5f, -0.5f,  0.0f,   // right vertex
+		0.0f,  1.0f,  0.0f,   // Color of vertex 1 
+		 
+		0.5f, 0.5f,  0.0f,   // top vertex
+		1.0f,  0.0f,  0.0f,   // Color of vertex 2
+
+		-0.5f,  0.5f,  0.0f,  // top left vertex
+		0.0f,  0.0f,  1.0f    // Color of vertex 3
+
+
 	};
+
+	// Here we need to take the winding order into account, we go from left to righ to top, this forms. We can use the right hand rule to find out the direction of face of the shape.
 
 	// Generating and selecting vertex array object, this determines how we move through VBO
 	glGenVertexArrays(1, &gVertexArrayObject);
@@ -278,7 +296,7 @@ void Draw() {
 	glBindVertexArray(gVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 //###################################################################################################//
