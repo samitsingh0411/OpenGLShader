@@ -25,7 +25,7 @@ extern std::string gVertexShaderSource;
 extern std::string gFragmentShaderSource;
 
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
 
 
 // Initializer Functions
@@ -179,13 +179,13 @@ void CreateSpecs() {
 	// Declaring our vertex data
 	const std::vector<GLfloat> VertexDataList = {
 		//x	 //y   //z
-		0.8f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.0f,
 		1.0f,  0.0f,  0.0f, // Color of vertex 1 
 	    
-		-0.8f, 0.0f,  0.0f,
+		0.5f, -0.5f,  0.0f,
 		0.0f,  1.0f,  0.0f, // Color of vertex 2
 
-		0.0f,  0.8f,  0.0f,
+		-0.5f,  0.5f,  0.0f,
 		0.0f,  0.0f,  1.0f // Color of vertex 3
 	};
 
