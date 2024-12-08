@@ -13,9 +13,10 @@ extern SDL_Window* MyWindow;
 extern SDL_GLContext MyContext;
 extern bool gQuit;
 
-// VBO and VAO
+// VBO, VAO and IBO 
 extern GLuint gVertexArrayObject;
 extern GLuint gVertexBufferObject;
+extern GLuint gIndexBufferObject;
 
 // Graphics Pipeline
 extern GLuint gGraphicsPipelineProgram;
@@ -170,7 +171,7 @@ void CreateGraphicsPipeline() {
 }
 
 
-//###################################################################################################//
+//################################################################################################//
 
 
 // Creating Vertex Specs	
@@ -181,28 +182,32 @@ void CreateSpecs() {
 		
 		// Triangle 1
 		//x	 //y   //z
-		-0.5f, -0.5f,  0.0f,   // left vertex
-		1.0f,  0.0f,  0.0f,   // Color of vertex 1 
+		-0.5f, -0.5f,  0.0f,    // Left Vertex Position
+		1.0f,  0.0f,  0.0f,		// Color vertex
 	    
-		0.5f, -0.5f,  0.0f,   // right vertex
-		0.0f,  1.0f,  0.0f,   // Color of vertex 2
+		0.5f, -0.5f,  0.0f,     // Right Vertex Position
+		0.0f,  1.0f,  0.0f,		// Color Right Vertex
 
-		-0.5f,  0.5f,  0.0f,  // top vertex
-		0.0f,  0.0f,  1.0f,    // Color of vertex 3
+		-0.5f,  0.5f,  0.0f,	// Top Left Vertex Position
+		0.0f,  0.0f,  1.0f,		// Color Top Left Vertex
 
 
-		// Trianle 2fg						
+		// Trianle 2			
 		//x	 //y   //z
-		0.5f, -0.5f,  0.0f,   // right vertex
-		0.0f,  1.0f,  0.0f,   // Color of vertex 1 
+		//0.5f, -0.5f,  0.0f,		// Right Vertex Position
+		//0.0f,  1.0f,  0.0f,		// Color Right Vertex
 		 
-		0.5f, 0.5f,  0.0f,   // top vertex
-		1.0f,  0.0f,  0.0f,   // Color of vertex 2
+		0.5f, 0.5f,  0.0f,		// Top Right Vertex Position
+		1.0f,  0.0f,  0.0f,		// Color Top Right Vertex
 
-		-0.5f,  0.5f,  0.0f,  // top left vertex
-		0.0f,  0.0f,  1.0f    // Color of vertex 3
+		//-0.5f,  0.5f,  0.0f,	// Top Left Vertex Position
+		//0.0f,  0.0f,  1.0f		// Color Top Left Vertex
 
-
+		
+	};
+	const std::vector<GLuint> IndexBufferData = { 
+		2, 0, 1, // First Triangle
+		3, 2, 1  // Second Triangle
 	};
 
 	// Here we need to take the winding order into account, we go from left to righ to top, this forms. We can use the right hand rule to find out the direction of face of the shape.
@@ -217,23 +222,33 @@ void CreateSpecs() {
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
 	std::cout << "Created and Binded Vertex Buffer Object\n";
 
-	// Setting VBO and VAO 
-		// Setting VBO
-	glBufferData(GL_ARRAY_BUFFER, VertexDataList.size() * sizeof(GLfloat), VertexDataList.data(), GL_STATIC_DRAW); 
-	std::cout << "put data into the vertex buffer object";
+
+	// Generatign and selecting index buffer object, this allows us to reuse data and have it not repeated in VBO
+	glGenBuffers(1, &gIndexBufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBufferObject);
+
+	// Setting VBO and VAO and IBO
+	
+		// Setting VBO:
+		glBufferData(GL_ARRAY_BUFFER, VertexDataList.size() * sizeof(GLfloat), VertexDataList.data(), GL_STATIC_DRAW); 
+		std::cout << "put data into the vertex buffer object";
 	
 		// Setting VAO
-	
-			// Setting Position
-	glEnableVertexAttribArray(0); // This enables vertex attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (void*)0);
-	std::cout << "Set position attrib\n";
 
-			// Setting Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (GLvoid*)(sizeof(GLfloat) * 3));
-	std::cout << "Set color attrib\n";
+			// Setting Position:
+			glEnableVertexAttribArray(0); // This enables vertex attributes
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (void*)0);
+			std::cout << "Set position attrib\n";
 
+			// Setting Color:
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (GLvoid*)(sizeof(GLfloat) * 3));
+			std::cout << "Set color attrib\n";
+
+
+		// Settign IBO
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexBufferData.size() * sizeof(GLuint), IndexBufferData.data(), GL_STATIC_DRAW);
+		
 	// Unbinding and Diabling stuff so that we don't write to them again
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);
@@ -296,7 +311,9 @@ void Draw() {
 	glBindVertexArray(gVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 //###################################################################################################//

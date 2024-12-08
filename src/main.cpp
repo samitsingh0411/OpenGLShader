@@ -10,9 +10,10 @@ SDL_Window* MyWindow;
 SDL_GLContext MyContext;
 bool gQuit = false;
 
-// VAO and VBO
+// VAO, VBO, IBO
 GLuint gVertexArrayObject = 0;
 GLuint gVertexBufferObject = 0;
+GLuint gIndexBufferObject = 0;
 
 // Graphics Pipleline
 GLuint gGraphicsPipelineProgram = 0;
